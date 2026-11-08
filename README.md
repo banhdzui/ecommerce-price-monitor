@@ -1,8 +1,9 @@
-# A demo of data crawling from e-commerce websites
+# A demo of crawling data from e-commerce websites
 
 ## Objectives
 
-This is a demo of data crawing from e-commercial websites, including:
+This is a demo of crawling data from e-commercial websites, including:
+
 - Collects product information from 2 e-commerce websites.
 - Extracts product names, prices and specifications.
 - Stores the information in PostgreSQL.
