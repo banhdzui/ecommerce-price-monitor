@@ -19,4 +19,8 @@ CRAWLER_SETTINGS = {
 
     # 5. Disable cookies to avoid tracking or session overhead
     'COOKIES_ENABLED': False,
+    "ITEM_PIPELINES": {
+        "pipelines.PostgreSQLPipeline": 300,
+    },
 }
+

@@ -1,8 +1,9 @@
 import argparse
+from pathlib import Path
 
 from scrapy.crawler import CrawlerProcess
 
-from crawler.settings import CRAWLER_SETTINGS
+from settings import CRAWLER_SETTINGS
 from crawler.spiders.books import BooksSpider
 from crawler.spiders.webscraper import WebScraperSpider
 
@@ -12,24 +13,26 @@ def _positive_int(value: str) -> int:
         raise argparse.ArgumentTypeError("must be at least 1")
     return pages
 
-configs = {
-    "books": BooksSpider,
-    "web": WebScraperSpider,
-}
 
 def main(args) -> None:
+    output = Path(args.output)
+    output.mkdir(parents=True, exist_ok=True)
+
     settings = {
         **CRAWLER_SETTINGS,
         "FEEDS": {
-            args.output: {
+            f"{args.output}/%(name)s.json" : {
                 "format": "json",
                 "encoding": "utf8",
                 "overwrite": True,
             }
         },
     }
+    spiders = [BooksSpider, WebScraperSpider]
+    
     process = CrawlerProcess(settings=settings)
-    process.crawl(configs[args.spider], max_pages=args.max_pages)
+    for spider in spiders:
+        process.crawl(spider, max_pages=args.max_pages)
     process.start()
 
 def setup_arguments():
@@ -38,19 +41,14 @@ def setup_arguments():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--spider", 
-        type=str, 
-        default="books",
-        help="The spider is used to crawl (default: books)")
-    parser.add_argument(
         "--max_pages", 
         type=_positive_int, 
         default=1,
         help="maximum number of pages to crawl (default: 1)")
     parser.add_argument(
         "--output",
-        default="products.json",
-        help="path for the JSON output file (default: products.json)",
+        default="output",
+        help="path to a folder containing JSON output files (default: output)",
     )
     
     return parser.parse_args()

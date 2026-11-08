@@ -1,5 +1,4 @@
 import scrapy
-from crawler import settings
 
 class BooksSpider(scrapy.Spider):
     name = "book.toscrape"
@@ -16,8 +15,11 @@ class BooksSpider(scrapy.Spider):
         for book in response.css("article.product_pod"):
             yield{
                 "source": self.name,
+                "category": "book",
                 "title": book.css("h3 a::attr(title)").get(),
-                "price": book.css("p.price_color::text").get(),
+                "price": float(book.css("p.price_color::text").get().strip("£$")),
+                "price_unit": "GBP",
+                "description": "",
                 "url": response.urljoin(book.css("h3 a::attr(href)").get())
             }
         if self.page_count >= self.max_pages:

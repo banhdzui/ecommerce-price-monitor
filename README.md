@@ -1,5 +1,4 @@
-# Automated E-commerce Data Crawling and Price Monitoring
-
+# Automated E-commerce Data Crawling
 ## Objectives
 
 Build a system that automatically:
