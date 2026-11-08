@@ -21,12 +21,9 @@ class WebScraperSpider(scrapy.Spider):
             card_body = car.css("div.card-body")
             card_footer = car.css("div.card-footer")
 
-            price_text = card_footer.css("span::text").get()
-            price = float(price_text.strip(string.ascii_letters).replace(" ", ""))
             yield {
                 "title": card_body.css("h3.card-title::attr(title)").get(),
-                "price": price,
-                "url": response.urljoin(card_head.css("a.card-head-url::attr(href)").get()),
+                "price": card_footer.css("span::text").get(),
                 "description": card_body.css("p.description::text").get()
             } 
 

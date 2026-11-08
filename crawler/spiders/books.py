@@ -14,12 +14,10 @@ class BooksSpider(scrapy.Spider):
         self.page_count += 1 
 
         for book in response.css("article.product_pod"):
-            price_text = book.css("p.price_color::text").get()
-            price = float(price_text.strip(settings.CURRENCY_STRING))
             yield{
                 "source": self.name,
                 "title": book.css("h3 a::attr(title)").get(),
-                "price": price,
+                "price": book.css("p.price_color::text").get(),
                 "url": response.urljoin(book.css("h3 a::attr(href)").get())
             }
         if self.page_count >= self.max_pages:
